@@ -69,6 +69,9 @@
         .navbar-toggler-icon {
             background-color: #fff;
         }
+        .btn-primary{
+            margin-top:10px;
+        }
     </style>
 </head>
 <body>
@@ -87,12 +90,16 @@
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid">
                 <span class="navbar-toggler-icon" onclick="openNav()"></span>
+                <a class="navbar-brand" href="#">Catatan</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link active" aria-current="page" href="{{ route('tasks.index') }}">Daftar Tugas</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('dashboard.index') }}">Home</a>
+                        @can('admin')
+                        <a class="nav-link" href="{{ route('dashboard.showDataPengguna') }}">Data Pengguna</a>
+                        @endcan
                     </div>
                 </div>
                 <div class="text-end d-flex align-items-center">
@@ -104,34 +111,13 @@
                             @csrf
                             <button type="submit" class="btn btn-danger">Logout</button>
                         </form>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </nav>
     
     <div class="container">
         <h1 class="mt-4">Daftar Tugas</h1>
-        <form method="post" action="{{ route('tasks.store') }}">
-            @csrf
-            <div class="mb-3">
-                <label for="title" class="form-label">Judul</label>
-                <input type="text" class="form-control" id="title" name="title" required>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Deskripsi</label>
-                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="start_date" class="form-label">Tanggal Mulai</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" required>
-            </div>
-            <div class="mb-3">
-                <label for="deadline" class="form-label">Tenggat Waktu</label>
-                <input type="date" class="form-control" id="deadline" name="deadline" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Tambah Tugas</button>
-        </form>
-        <h2 class="mt-4">List Tugas</h2>
         <ul class="list-group">
             @foreach($tasks as $task)
                 <li class="list-group-item">
@@ -148,6 +134,7 @@
                 </li>
             @endforeach
         </ul>
+        <button href="{{ route('tasks.create') }}" type="submit" class="btn btn-primary">Tambah Tugas</button>
     </div>
 
     <script>

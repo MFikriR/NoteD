@@ -8,6 +8,7 @@
     <style>
         /* General Styles */
         body {
+            font-family: Arial, sans-serif;
             background-color:mediumslateblue; /* Light blue background */
             display: flex;
             justify-content: center;
@@ -19,11 +20,10 @@
         .container {
             background-color: #ffffff;
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            width: 400px;
             text-align: center;
-            min-height: 400px; 
         }
 
         h1 {
@@ -51,24 +51,20 @@
             background-color: #4CAF50;
             border: none;
             transition: background-color 0.3s ease;
-            width: 100%;
         }
 
         .btn-primary:hover {
             background-color: #45a049;
         }
-        .register-link {
-            color: #007bff;
-            text-decoration: none;
+
+        .btn-success {
+            background-color: #007BFF;
+            border: none;
+            transition: background-color 0.3s ease;
         }
 
-        .register-link:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-
-        .footer {
-            margin-bottom: auto; 
+        .btn-success:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -81,19 +77,19 @@
                     <form method="post" action="{{ route('login') }}">
                         @csrf
                         
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="name@example.com" autofocus required value="{{old ('email')}}">
-                            <label for="email">Email</label>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
                             @error('email')
                             <div class="invalid-feedback">
                                 {{ $message }}
-                            </div>
+                            </div>                            
                             @enderror
-                        </div>                        
+                        </div>
                         
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password" required>
-                            <label for="password">Password</label>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
                             @error('password')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -109,12 +105,8 @@
                         <div class="row text-end">
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary">Login</button>
-                                
+                                <a href="{{ route('register') }}" class="btn btn-success">Register</a>
                             </div>
-                        </div>
-                        <div>
-                            <span>Belum punya akun? </span>
-                            <a href="{{ route('register') }}" class="register-link">Register</a>
                         </div>
                     </form>
                 </div>

@@ -8,18 +8,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
         body {
-                background: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNBdEQclaDpdc14GSFbviCnwIFwGODtRrOzlJgqJ-B8gS5QSaNvklHQzdGDdNzfRvt1zQ7DzhBWWIM3Q7NFdR3mp8b8La2k6GzogKU8mS7CUo0jV8Spzvmt_w8kHstTUOfu2x6xWC5JQgk/s1600/Slider-2-Menara_Pandang-BanjarmasinTourism.jpg");
+            @if($background = \App\Models\Setting::where('key', 'dashboard_background')->first())
+                background: url('{{ asset('storage/' . $background->value) }}') no-repeat center center fixed;
                 background-size: cover;
-                box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.7);
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
+            @else
+                background: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNBdEQclaDpdc14GSFbviCnwIFwGODtRrOzlJgqJ-B8gS5QSaNvklHQzdGDdNzfRvt1zQ7DzhBWWIM3Q7NFdR3mp8b8La2k6GzogKU8mS7CUo0jV8Spzvmt_w8kHstTUOfu2x6xWC5JQgk/s1600/Slider-2-Menara_Pandang-BanjarmasinTourism.jpg") no-repeat center center fixed;
+                background-size: cover;
+            @endif
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.7);
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         .note-card {
             border: 1px solid #dddddd;
-            border-radius: 10px;    
+            border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             background-color:  #ffffff;
@@ -71,32 +76,32 @@
             background-color: #fff;
         }
         input.form-control {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ubah nilai shadow sesuai kebutuhan */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         textarea.form-control {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ubah nilai shadow sesuai kebutuhan */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         h1, h3, h4 {
-        color: white;
-    }
-    label {
-        background-color: white;
-        padding: 10px;
-        border-radius:10px;
-        font-weight:bold;
-    }
+            color: white;
+        }
+        label {
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
-<body >
+<body>
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="{{ route('dashboard.index') }}">Home</a>
-        <a href="#">Profil</a>
-        <a href="{{ route('calender') }}">Kalender</a> <!-- Updated this line -->
+        <a href="{{ route('profile.show') }}">Profil</a>
+        <a href="{{ route('calender') }}">Kalender</a>
         <a href="#">Quest</a>
         <a href="{{ route('notes.index') }}">List Catatan</a>
         <a href="{{ route('tasks.index') }}">List Tugas</a>
-        <a href="#">Setting</a>
+        <a href="{{ route('settings.index') }}">Setting</a>
     </div>
 
     <div id="main">
@@ -108,7 +113,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link active" aria-current="page" href="{{ route('dashboard.index') }}">Beranda</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('dashboard.index') }}">Home</a>
                         @can('admin')
                         <a class="nav-link" href="{{ route('dashboard.showDataPengguna') }}">Data Pengguna</a>
                         @endcan

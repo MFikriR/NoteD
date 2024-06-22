@@ -92,7 +92,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link active" aria-current="page" href="{{ route('notes.index') }}">Daftar Catatan</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('dashboard.index') }}">Home</a>
+                        @can('admin')
+                        <a class="nav-link" href="{{ route('dashboard.showDataPengguna') }}">Data Pengguna</a>
+                        @endcan
                     </div>
                 </div>
                 <div class="text-end d-flex align-items-center">
@@ -104,7 +107,7 @@
                             @csrf
                             <button type="submit" class="btn btn-danger">Logout</button>
                         </form>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </nav>

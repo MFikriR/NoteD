@@ -22,14 +22,12 @@ class RegisterController extends Controller
         $validator = $request->validate([
             'namaInput' => 'required',
             'emailInput' => 'required|email',
-            'nimInput' => 'required|numeric',
             'passwordInput' => 'required|min:8|confirmed',
         ]);
 
         $query = User::create([
             'name' => $request->namaInput,
             'email' => $request->emailInput,
-            'nim' => $request->nimInput,
             'password' => Hash::make($request->passwordInput),
             'is_admin' => 0
         ]);
