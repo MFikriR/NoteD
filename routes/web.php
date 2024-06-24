@@ -10,6 +10,9 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\CalenderNoteController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\QuestController;
+use App\Http\Controllers\BackgroundController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,9 +61,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
 });
 
-
+Route::post('/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
 Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
 
 Route::middleware('auth')->group(function () {
@@ -69,10 +74,24 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
+// routes/web.php
+
+Route::resource('settings', SettingController::class);
 Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-Route::get('/settings/change-background', [SettingController::class, 'changeBackground'])->name('settings.changeBackground');
 Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
-Route::delete('/settings/{id}', [SettingController::class, 'destroy'])->name('settings.destroy');
 Route::get('/settings/{id}/edit', [SettingController::class, 'edit'])->name('settings.edit');
 Route::put('/settings/{id}', [SettingController::class, 'update'])->name('settings.update');
-Route::get('/settings/brightness', [SettingController::class, 'brightness'])->name('settings.brightness');
+Route::delete('/settings/{id}', [SettingController::class, 'destroy'])->name('settings.destroy');
+
+
+
+Route::get('/quests', [QuestController::class, 'index'])->name('quests.index');
+
+Route::resource('quests', QuestController::class);
+Route::patch('quests/{quest}/complete', [QuestController::class, 'complete'])->name('quests.complete');
+
+// routes/web.php
+Route::get('/background', [BackgroundController::class, 'showForm'])->name('background.show');
+Route::post('/background', [BackgroundController::class, 'changeBackground'])->name('background.change');
+
+

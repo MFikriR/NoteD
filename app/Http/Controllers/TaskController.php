@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -16,21 +17,29 @@ class TaskController extends Controller
 
     public function create()
     {
-        return view('tasks.add');
+        return view('tasks.create');
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        // Validasi input
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'start_date' => 'required|date',
-            'deadline' => 'required|date',
+            'deadline' => 'required|date|after_or_equal:start_date',
         ]);
 
-        Task::create($validatedData);
+        // Buat tugas baru
+        Task::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'start_date' => $validated['start_date'],
+            'deadline' => $validated['deadline'],
+        ]);
 
-        return redirect()->route('tasks.index');
+        // Redirect ke halaman daftar tugas dengan pesan sukses
+        return redirect()->route('tasks.index')->with('success', 'Tugas berhasil ditambahkan!');
     }
 
     public function edit(Task $task)
@@ -57,6 +66,26 @@ class TaskController extends Controller
         $task->delete();
 
         return redirect()->route('tasks.index');
+    }
+
+    public function complete(Task $task)
+    {
+        $task->completed = true;
+        $task->save();
+
+        $user = Auth::user();
+        $currentDate = now();
+        $deadline = $task->deadline;
+
+        if ($currentDate <= $deadline) {
+            $user->exp += $task->quest->exp;
+        } else {
+            $user->exp -= $task->quest->exp;
+        }
+
+        $user->save();
+
+        return redirect()->route('tasks.index')->with('success', 'Task completed!');
     }
 
     

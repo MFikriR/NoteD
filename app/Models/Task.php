@@ -1,5 +1,6 @@
 <?php
 
+// app/Models/Task.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,15 +10,12 @@ class Task extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'title',
-        'description',
-        'start_date',
-        'deadline',
+        'title', 'description', 'start_date', 'deadline', 'quest_id', 'completed'
     ];
+
+    public function quest()
+    {
+        return $this->belongsTo(Quest::class);
+    }
 }

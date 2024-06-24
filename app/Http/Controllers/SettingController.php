@@ -6,30 +6,53 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class SettingController extends Controller
 {
     public function index()
     {
-        $settings = Setting::all();
-        return view('settings.index', compact('settings'));
+        $background = Setting::where('key', 'dashboard_background')->first();
+        $settings = Setting::all(); 
+
+        return view('settings.index', [
+            'background' => $background,
+            'settings' => $settings,
+        ]);
     }
+
 
     public function store(Request $request)
     {
         $request->validate([
-            'key' => 'required|unique:settings',
-            'value' => 'required|image',
+            'key' => 'required|string',
+            'value' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $path = $request->file('value')->store('backgrounds', 'public');
+        if ($request->file('value')) {
+            $filePath = $request->file('value')->store('public/background');
+            $fileName = basename($filePath);
+            
+            // Cek apakah entri dengan kunci 'dashboard_background' sudah ada
+            $setting = Setting::where('key', 'dashboard_background')->first();
 
-        Setting::create([
-            'key' => $request->key,
-            'value' => $path,
-        ]);
+            if ($setting) {
+                // Jika ada, perbarui entri yang ada
+                if ($setting->value && Storage::disk('public')->exists($setting->value)) {
+                    Storage::disk('public')->delete($setting->value);
+                }
+                $setting->value = 'background/' . $fileName;
+                $setting->save();
+            } else {
+                // Jika tidak ada, buat entri baru
+                $setting = new Setting();
+                $setting->key = $request->key;
+                $setting->value = 'background/' . $fileName;
+                $setting->save();
+            }
+        }
 
-        return redirect()->route('settings.index')->with('success', 'Setting created successfully');
+        return redirect()->route('settings.index')->with('success', 'Setting created or updated successfully.');
     }
 
     public function edit($id)
@@ -38,26 +61,28 @@ class SettingController extends Controller
         return view('settings.edit', compact('setting'));
     }
 
+
+
     public function update(Request $request, $id)
     {
         $setting = Setting::findOrFail($id);
 
         $request->validate([
-            'key' => 'required|unique:settings,key,'.$setting->id,
-            'value' => 'nullable|image',
+            'key' => 'required|unique:settings,key,' . $setting->id,
+            'value' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        if ($request->hasFile('value')) {
-            // Delete old file
-            if ($setting->value) {
+        if ($request->file('value')) {
+            if ($setting->value && Storage::disk('public')->exists($setting->value)) {
                 Storage::disk('public')->delete($setting->value);
             }
 
-            // Upload new file
-            $path = $request->file('value')->store('backgrounds', 'public');
+            $filePath = $request->file('value')->store('public/background');
+            $fileName = basename($filePath);
+
             $setting->update([
                 'key' => $request->key,
-                'value' => $path,
+                'value' => 'background/' . $fileName,
             ]);
         } else {
             $setting->update([
@@ -68,27 +93,17 @@ class SettingController extends Controller
         return redirect()->route('settings.index')->with('success', 'Setting updated successfully');
     }
 
+
     public function destroy($id)
     {
         $setting = Setting::findOrFail($id);
 
-        // Delete associated file
-        if ($setting->value) {
+        if ($setting->value && Storage::disk('public')->exists($setting->value)) {
             Storage::disk('public')->delete($setting->value);
         }
 
         $setting->delete();
 
         return redirect()->route('settings.index')->with('success', 'Setting deleted successfully');
-    }
-
-    public function changeBackground()
-    {
-        return view('settings.changeBackground');
-    }
-
-    public function brightness()
-    {
-        return view('settings.brightness');
     }
 }

@@ -83,6 +83,12 @@
         }
         h1, h3, h4 {
             color: white;
+            -webkit-text-stroke-color: #111;
+            -webkit-text-stroke-width: 1px;
+            text-shadow: -1px 1px 0 #000,
+            1px 1px 0 #000,
+            1px 1px 0 #000,
+            -1px 1px 0 #000;
         }
         label {
             background-color: white;
@@ -98,7 +104,7 @@
         <a href="{{ route('dashboard.index') }}">Home</a>
         <a href="{{ route('profile.show') }}">Profil</a>
         <a href="{{ route('calender') }}">Kalender</a>
-        <a href="#">Quest</a>
+        <a href="{{ route('quests.index') }}">Quest</a>
         <a href="{{ route('notes.index') }}">List Catatan</a>
         <a href="{{ route('tasks.index') }}">List Tugas</a>
         <a href="{{ route('settings.index') }}">Setting</a>
@@ -156,11 +162,11 @@
                         @csrf
                         <div class="mb-3">
                             <label for="title" class="form-label">Judul</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
+                            <input type="text" class="form-control" id="title" name="title" maxlength="50" required>
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">Isi Catatan</label>
-                            <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+                            <textarea class="form-control" id="content" name="content" rows="4" maxlength="500" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Tambah Catatan</button>
                     </form>

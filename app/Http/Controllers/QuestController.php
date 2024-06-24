@@ -2,27 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Quest;
+use Illuminate\Http\Request;
 
 class QuestController extends Controller
 {
     public function index()
     {
-        $quests = Quest::all();
+        $quests = Quest::with('tasks')->get();
+
         return view('quests.index', compact('quests'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'exp_reward' => 'required|integer',
+            'title' => 'required',
+            'description' => 'required',
+            'due_date' => 'required|date',
         ]);
 
-        Quest::create($request->all());
+        Quest::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'due_date' => $request->due_date,
+            'exp' => 100, // contoh nilai EXP default
+            'late_penalty' => 20, // contoh pengurangan EXP jika terlambat
+        ]);
 
-        return redirect()->route('quests.index')->with('success', 'Quest created successfully.');
+        return redirect()->route('quests.index');
     }
+
+    // Metode lain untuk update dan complete quests
 }

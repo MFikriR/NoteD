@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Change Background</title>
+    <title>Tambah Tugas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
         body {
-            background: url('{{ asset('storage/' . \App\Models\Setting::where('key', 'dashboard_background')->value('value')) ?? "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNBdEQclaDpdc14GSFbviCnwIFwGODtRrOzlJgqJ-B8gS5QSaNvklHQzdGDdNzfRvt1zQ7DzhBWWIM3Q7NFdR3mp8b8La2k6GzogKU8mS7CUo0jV8Spzvmt_w8kHstTUOfu2x6xWC5JQgk/s1600/Slider-2-Menara_Pandang-BanjarmasinTourism.jpg" }}') no-repeat center center fixed;
-            background-size: cover;
+            @if($background = \App\Models\Setting::where('key', 'dashboard_background')->first())
+                background: url('{{ asset('storage/' . $background->value) }}') no-repeat center center fixed;
+                background-size: cover;
+            @else
+                background: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNBdEQclaDpdc14GSFbviCnwIFwGODtRrOzlJgqJ-B8gS5QSaNvklHQzdGDdNzfRvt1zQ7DzhBWWIM3Q7NFdR3mp8b8La2k6GzogKU8mS7CUo0jV8Spzvmt_w8kHstTUOfu2x6xWC5JQgk/s1600/Slider-2-Menara_Pandang-BanjarmasinTourism.jpg") no-repeat center center fixed;
+                background-size: cover;
+            @endif
             box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.7);
             width: 100%;
             height: 100%;
@@ -78,6 +83,13 @@
         }
         h1, h3, h4 {
             color: white;
+            -webkit-text-stroke-color: #111;
+            -webkit-text-stroke-width: 1px;
+            text-shadow: -1px 1px 0 #000,
+            1px 1px 0 #000,
+            1px 1px 0 #000,
+            -1px 1px 0 #000;
+
         }
         label {
             background-color: white;
@@ -108,7 +120,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link active" aria-current="page" href="{{ route('dashboard.index') }}">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('tasks.index') }}">List Tugas</a>
                         @can('admin')
                         <a class="nav-link" href="{{ route('dashboard.showDataPengguna') }}">Data Pengguna</a>
                         @endcan
@@ -127,22 +139,29 @@
                 </div>
             </div>
         </nav>
-
-        <div class="container">
-            <h2>Ganti Background</h2>
-            <form action="{{ route('settings.store') }}" method="POST" enctype="multipart/form-data" class="mb-4">
-                @csrf
-                <div class="form-group mb-3">
-                    <label for="key" class="form-label">Key:</label>
-                    <input type="text" class="form-control" id="key" name="key" value="dashboard_background" readonly>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="value" class="form-label">Value:</label>
-                    <input type="file" class="form-control" id="value" name="value">
-                </div>
-                <button type="submit" class="btn btn-primary">Tambah Pengaturan</button>
-            </form>
-        </div>
+    
+    <div class="container">
+        <h1 class="mt-4">Tambah Tugas</h1>
+        <form action="{{ route('tasks.store') }}" method="POST">
+            @csrf
+            <div class="mb-3">
+                <label for="title" class="form-label">Judul Tugas</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Deskripsi</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="start_date" class="form-label">Tanggal Mulai</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" required>
+            </div>
+            <div class="mb-3">
+                <label for="deadline" class="form-label">Tanggal Deadline</label>
+                <input type="date" class="form-control" id="deadline" name="deadline" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Tambah Tugas</button>
+        </form>
     </div>
 
     <script>
@@ -156,6 +175,7 @@
             document.getElementById("main").style.marginLeft= "0";
         }
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>

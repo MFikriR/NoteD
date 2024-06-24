@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Quest.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,10 +9,12 @@ class Quest extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'exp_reward'];
+    protected $fillable = [
+        'title', 'description', 'due_date', 'exp'
+    ];
 
-    public function users()
+    public function tasks()
     {
-        return $this->belongsToMany(User::class, 'user_quests');
+        return $this->hasMany(Task::class);
     }
 }

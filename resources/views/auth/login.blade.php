@@ -9,7 +9,10 @@
         /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            background-color:mediumslateblue; /* Light blue background */
+            background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNBdEQclaDpdc14GSFbviCnwIFwGODtRrOzlJgqJ-B8gS5QSaNvklHQzdGDdNzfRvt1zQ7DzhBWWIM3Q7NFdR3mp8b8La2k6GzogKU8mS7CUo0jV8Spzvmt_w8kHstTUOfu2x6xWC5JQgk/s1600/Slider-2-Menara_Pandang-BanjarmasinTourism.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -77,9 +80,9 @@
                     <form method="post" action="{{ route('login') }}">
                         @csrf
                         
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Email" name="email" autofocus required>
+                            <label for="email">Email</label>
                             @error('email')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -87,9 +90,9 @@
                             @enderror
                         </div>
                         
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                        <div class="form-floating">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password" name="password" required>
+                            <label for="password">Password</label>
                             @error('password')
                             <div class="invalid-feedback">
                                 {{ $message }}

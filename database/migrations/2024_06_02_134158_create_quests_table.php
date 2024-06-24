@@ -10,18 +10,19 @@ class CreateQuestsTable extends Migration
     {
         Schema::create('quests', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->text('description');
-            $table->integer('exp_reward');
+            $table->dateTime('due_date');
+            $table->boolean('completed')->default(false);
+            $table->dateTime('completed_at')->nullable();
+            $table->integer('exp')->default(0);
+            $table->integer('late_penalty')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('quests');
     }
-};
+}
